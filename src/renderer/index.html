@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';" />
+<title>AI Token Monitor</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── 타이틀바 ── -->
+  <header class="titlebar" id="titlebar">
+    <div class="titlebar-left">
+      <span class="app-name">TOKEN MONITOR</span>
+      <span class="status-dot" id="statusDot"></span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="ctrl-btn ctrl-currency" id="btnCurrency" title="통화 전환">USD</button>
+      <button class="ctrl-btn" id="btnCompact" title="접기">─</button>
+      <button class="ctrl-btn ctrl-close" id="btnClose" title="숨기기">×</button>
+    </div>
+  </header>
+
+  <!-- ── 컴팩트 모드 바 (접었을 때 TODAY 요약만) ── -->
+  <div class="compact-bar" id="compactBar">
+    <span class="stat-item"><span class="stat-val stat-val-hero" id="compactTok">—</span><span class="stat-unit">tokens</span></span>
+    <span class="stat-item"><span class="stat-val stat-val-hero" id="compactCost">—</span><span class="stat-unit">cost</span></span>
+    <span class="stat-item"><span class="stat-val stat-val-hero" id="compactReqs">—</span><span class="stat-unit">requests</span></span>
+  </div>
+
+  <!-- ── 프로바이더 탭 ── -->
+  <nav class="provider-tabs">
+    <button class="tab active" data-provider="all">ALL</button>
+    <button class="tab tab-claude" data-provider="claude">CLAUDE</button>
+    <button class="tab tab-codex" data-provider="codex">CODEX</button>
+  </nav>
+
+  <!-- ── 스크롤 컨테이너 (페이지 단위 스냅) ── -->
+  <div class="scroll-body" id="scrollBody">
+
+    <div class="page">
+    <!-- ── 오늘 요약 ── -->
+    <section class="section">
+      <div class="section-label">TODAY</div>
+      <div class="stat-row stat-row-hero">
+        <span class="stat-item"><span class="stat-val stat-val-hero" id="todayTok">—</span><span class="stat-unit">tokens</span></span>
+        <span class="stat-item"><span class="stat-val stat-val-hero" id="todayCost">—</span><span class="stat-unit">cost</span></span>
+        <span class="stat-item"><span class="stat-val stat-val-hero" id="todayReqs">—</span><span class="stat-unit">requests</span></span>
+      </div>
+    </section>
+
+    <!-- ── 세션 알림 바 ── -->
+    <section class="section">
+      <div class="section-label">SESSION USAGE</div>
+      <div class="bar-group">
+        <div class="bar-row">
+          <span class="bar-label">5h session</span>
+          <div class="progress-track">
+            <div class="progress-fill session-fill" id="sessionBar"></div>
+          </div>
+          <span class="bar-val" id="sessionPct">0%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">weekly</span>
+          <div class="progress-track">
+            <div class="progress-fill week-fill" id="weekBar"></div>
+          </div>
+          <span class="bar-val" id="weekPct">0%</span>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-item"><span class="stat-val" id="sessionTok">—</span><span class="stat-unit">tok / 5h</span></span>
+        <span class="stat-item"><span class="stat-val" id="sessionCost">—</span><span class="stat-unit">cost / 5h</span></span>
+        <span class="stat-item"><span class="stat-val" id="weekCost">—</span><span class="stat-unit">cost / 7d</span></span>
+      </div>
+    </section>
+    </div><!-- /page 1 -->
+
+    <div class="page">
+    <!-- ── 일별 차트 ── -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-label">DAILY USAGE</span>
+        <div class="chart-controls">
+          <button class="chip active" data-range="7">7d</button>
+          <button class="chip" data-range="30">30d</button>
+          <button class="chip active2" data-metric="tokens">tok</button>
+          <button class="chip" data-metric="cost">cost</button>
+        </div>
+      </div>
+      <div class="chart-wrap" id="dailyChart"></div>
+      <div class="chart-legend" id="chartLegend">
+        <span class="legend-item"><span class="legend-dot dot-claude"></span>claude</span>
+        <span class="legend-item"><span class="legend-dot dot-codex"></span>codex</span>
+      </div>
+    </section>
+
+    <!-- ── 활동 히트맵 ── -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-label">ACTIVITY</span>
+        <div class="chart-controls">
+          <button class="nav-btn" id="heatPrev">‹</button>
+          <span class="year-label" id="heatYear">2026</span>
+          <button class="nav-btn" id="heatNext">›</button>
+        </div>
+      </div>
+      <div id="heatmapWrap" class="heatmap-wrap">
+        <canvas id="heatmap2d"></canvas>
+      </div>
+      <div class="heatmap-legend">
+        <span class="legend-label">less</span>
+        <div class="legend-swatch l0"></div>
+        <div class="legend-swatch l1"></div>
+        <div class="legend-swatch l2"></div>
+        <div class="legend-swatch l3"></div>
+        <div class="legend-swatch l4"></div>
+        <span class="legend-label">more</span>
+      </div>
+    </section>
+    </div><!-- /page 2 -->
+
+    <div class="page">
+    <!-- ── 모델별 분석 ── -->
+    <section class="section">
+      <div class="section-label">MODEL BREAKDOWN</div>
+      <div id="modelList" class="model-list"></div>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-dot dot-input"></span>input</span>
+        <span class="legend-item"><span class="legend-dot dot-output"></span>output</span>
+        <span class="legend-item"><span class="legend-dot dot-cache"></span>cache</span>
+      </div>
+    </section>
+    </div><!-- /page 3 -->
+
+    <div class="page">
+    <!-- ── 캐시 효율 ── -->
+    <section class="section">
+      <div class="section-label">CACHE EFFICIENCY</div>
+      <div class="cache-row">
+        <canvas id="donutChart"></canvas>
+        <div class="cache-stats" id="cacheStats"></div>
+      </div>
+    </section>
+
+    <!-- ── 기간 네비게이션 ── -->
+    <section class="section">
+      <div class="section-header">
+        <button class="nav-btn" id="periodPrev">‹</button>
+        <span class="period-label" id="periodLabel">THIS WEEK</span>
+        <button class="nav-btn" id="periodNext">›</button>
+        <div class="chart-controls">
+          <button class="chip active" data-period="week">wk</button>
+          <button class="chip" data-period="month">mo</button>
+          <button class="chip" data-period="all">all</button>
+        </div>
+      </div>
+      <div id="periodStats" class="period-stats"></div>
+    </section>
+    </div><!-- /page 4 -->
+
+    <div class="page page-tail">
+    <!-- ── 로그 경로 · 환율 ── -->
+    <section class="section section-path">
+      <div class="section-label">LOG PATHS</div>
+      <div id="logPaths" class="log-paths"></div>
+      <div id="fxInfo" class="fx-info"></div>
+    </section>
+    </div><!-- /page 5 -->
+
+  </div><!-- /.scroll-body -->
+</div><!-- /#app -->
+
+<script src="app.js"></script>
+</body>
+</html>

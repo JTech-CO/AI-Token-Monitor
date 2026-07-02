@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>개인정보 처리방침 — AI Token Monitor</title>
+<style>
+:root {
+  --bg:         #0a0a0a;
+  --bg-panel:   #0f0f0f;
+  --bg-raised:  #171717;
+  --bg-input:   #1e1e1e;
+  --border:     #2a2a2a;
+  --border-dim: #1f1f1f;
+  --text:       #e6e6e6;
+  --text-muted: #8a8a8a;
+  --text-dim:   #5c5c5c;
+  --accent:     #4ade80;
+  --accent-dim: #1a3d26;
+  --claude:     #d97706;
+  --codex:      #60a5fa;
+  --radius:     4px;
+  --font-mono:  ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+
+/* 타이틀바 — 앱과 동일한 구성 */
+.titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; height: 46px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+}
+.titlebar-left { display: flex; align-items: center; gap: 8px; }
+.app-name { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--text-muted); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.lang-btn {
+  min-width: 34px; height: 26px; padding: 0 9px;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+.lang-btn:hover { background: var(--bg-input); color: var(--text); }
+.lang-btn.on { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  padding: 28px 32px 36px;
+}
+
+h1 { font-size: 21px; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; }
+.updated { font-size: 12px; color: var(--text-dim); margin-bottom: 28px; }
+
+.section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  color: var(--text-dim); margin: 30px 0 10px;
+  padding-top: 22px; border-top: 1px solid var(--border-dim);
+}
+p { color: var(--text-muted); margin-bottom: 10px; }
+strong { color: var(--text); font-weight: 600; }
+ul { list-style: none; margin-bottom: 10px; }
+li { color: var(--text-muted); padding-left: 18px; position: relative; margin-bottom: 6px; }
+li::before { content: "–"; position: absolute; left: 2px; color: var(--accent); }
+code {
+  background: var(--bg-input); border: 1px solid var(--border-dim);
+  border-radius: 3px; padding: 1px 6px; font-size: 12px; color: var(--text);
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+th, td { text-align: left; padding: 8px 12px; border: 1px solid var(--border-dim); color: var(--text-muted); }
+th { color: var(--text-dim); font-size: 11px; letter-spacing: 0.1em; font-weight: 600; background: var(--bg-raised); }
+
+.footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-dim); font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+[data-lang] { display: none; }
+html[data-active="ko"] [data-lang="ko"] { display: revert; }
+html[data-active="en"] [data-lang="en"] { display: revert; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="titlebar">
+    <div class="titlebar-left">
+      <span class="app-name">AI TOKEN MONITOR</span>
+      <span class="status-dot"></span>
+    </div>
+    <div style="display:flex; gap:5px;">
+      <button class="lang-btn on" id="btnKo">한국어</button>
+      <button class="lang-btn" id="btnEn">EN</button>
+    </div>
+  </header>
+
+  <main class="panel">
+
+    <!-- ─────────────── 한국어 ─────────────── -->
+    <div data-lang="ko">
+      <h1>개인정보 처리방침</h1>
+      <div class="updated">시행일: 2026-07-03</div>
+
+      <p><strong>AI Token Monitor</strong>(이하 "본 앱")는 사용자의 컴퓨터에서만 동작하는
+      로컬 데스크톱 애플리케이션입니다. 본 앱은 <strong>어떠한 개인정보도 수집·저장·전송하지
+      않습니다.</strong> 본 문서는 앱이 접근하는 데이터와 그 처리 방식을 투명하게 알리기 위해
+      작성되었습니다.</p>
+
+      <div class="section-label">1. 수집하는 개인정보</div>
+      <p><strong>없습니다.</strong> 본 앱은 계정, 로그인, 텔레메트리, 분석 도구, 광고 식별자,
+      쿠키를 일절 사용하지 않으며 개발자를 포함한 어떤 외부 주체에게도 데이터를 전송하지 않습니다.</p>
+
+      <div class="section-label">2. 로컬에서 접근하는 데이터</div>
+      <p>본 앱은 사용량 통계 계산을 위해 아래 로그 파일을 <strong>읽기 전용</strong>으로 접근합니다.
+      이 파일들은 Claude Code와 Codex CLI가 사용자 컴퓨터에 생성한 것으로, 본 앱이 내용을
+      수정·삭제·업로드하지 않습니다.</p>
+      <table>
+        <tr><th>대상</th><th>경로</th><th>용도</th></tr>
+        <tr><td>Claude Code 로그</td><td><code>~/.claude/projects/**/*.jsonl</code></td><td>토큰 수·비용 집계</td></tr>
+        <tr><td>Codex CLI 로그</td><td><code>~/.codex/sessions/**/*.jsonl</code></td><td>토큰 수·비용 집계</td></tr>
+      </table>
+      <p>집계 결과는 메모리에서만 처리되며 별도 파일이나 외부 서버에 저장되지 않습니다.
+      로그의 대화 내용(프롬프트·응답 텍스트)은 파싱 대상이 아니며, 토큰 수·모델명·타임스탬프
+      필드만 읽습니다.</p>
+
+      <div class="section-label">3. 네트워크 통신</div>
+      <p>본 앱이 수행하는 네트워크 요청은 <strong>환율 조회 1건</strong>이 유일합니다.</p>
+      <ul>
+        <li>대상: <code>open.er-api.com</code> (USD→KRW 환율, 1일 1회 수준)</li>
+        <li>전송되는 데이터: 없음 — 파라미터 없는 단순 조회(GET) 요청입니다.</li>
+        <li>요청 실패 시 내장된 고정 환율(1,540원)을 사용하며 앱은 완전히 오프라인으로 동작합니다.</li>
+      </ul>
+
+      <div class="section-label">4. 제3자 제공 및 위탁</div>
+      <p>수집하는 정보가 없으므로 제3자 제공, 처리 위탁, 국외 이전이 발생하지 않습니다.</p>
+
+      <div class="section-label">5. 사용자의 통제권</div>
+      <ul>
+        <li>본 앱은 오픈소스이며 전체 소스 코드를 누구나 검증할 수 있습니다.</li>
+        <li>앱을 삭제하면 앱과 관련된 모든 것이 제거됩니다. 로그 파일은 각 CLI 도구의 소관이며 본 앱과 무관하게 유지됩니다.</li>
+      </ul>
+
+      <div class="section-label">6. 방침 변경 및 문의</div>
+      <p>본 방침이 변경되는 경우 저장소의 본 문서를 통해 고지합니다.
+      문의는 GitHub 저장소의 <a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">Issues</a>로 부탁드립니다.</p>
+    </div>
+
+    <!-- ─────────────── English ─────────────── -->
+    <div data-lang="en">
+      <h1>Privacy Policy</h1>
+      <div class="updated">Effective date: 2026-07-03</div>
+
+      <p><strong>AI Token Monitor</strong> ("the App") is a local desktop application that runs
+      entirely on your computer. The App <strong>does not collect, store, or transmit any
+      personal information.</strong> This document transparently describes what data the App
+      touches and how it is handled.</p>
+
+      <div class="section-label">1. Personal Data We Collect</div>
+      <p><strong>None.</strong> The App has no accounts, no sign-in, no telemetry, no analytics,
+      no advertising identifiers, and no cookies. No data is ever sent to the developer or any
+      other party.</p>
+
+      <div class="section-label">2. Data Accessed Locally</div>
+      <p>To compute usage statistics, the App reads the following log files in
+      <strong>read-only</strong> mode. These files are created on your machine by Claude Code
+      and the Codex CLI; the App never modifies, deletes, or uploads them.</p>
+      <table>
+        <tr><th>Source</th><th>Path</th><th>Purpose</th></tr>
+        <tr><td>Claude Code logs</td><td><code>~/.claude/projects/**/*.jsonl</code></td><td>Token &amp; cost aggregation</td></tr>
+        <tr><td>Codex CLI logs</td><td><code>~/.codex/sessions/**/*.jsonl</code></td><td>Token &amp; cost aggregation</td></tr>
+      </table>
+      <p>Aggregates are computed in memory only and are never written to files or external
+      servers. Conversation content (prompt/response text) is not parsed — only token counts,
+      model names, and timestamps are read.</p>
+
+      <div class="section-label">3. Network Communication</div>
+      <p>The App makes exactly <strong>one kind of network request</strong>: an exchange-rate
+      lookup.</p>
+      <ul>
+        <li>Endpoint: <code>open.er-api.com</code> (USD→KRW rate, roughly once per day)</li>
+        <li>Data transmitted: none — a plain parameterless GET request.</li>
+        <li>If the request fails, a built-in fixed rate (₩1,540) is used and the App works fully offline.</li>
+      </ul>
+
+      <div class="section-label">4. Third-Party Sharing</div>
+      <p>Since no data is collected, there is no third-party sharing, processing delegation,
+      or cross-border transfer of any kind.</p>
+
+      <div class="section-label">5. Your Control</div>
+      <ul>
+        <li>The App is open source; anyone can audit the full source code.</li>
+        <li>Uninstalling the App removes everything related to it. The log files belong to the respective CLI tools and remain unaffected.</li>
+      </ul>
+
+      <div class="section-label">6. Changes &amp; Contact</div>
+      <p>Any changes to this policy will be announced through this document in the repository.
+      For questions, please open an issue on
+      <a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">GitHub Issues</a>.</p>
+    </div>
+
+    <div class="footer">
+      <span>AI Token Monitor · MIT License</span>
+      <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="index.html" data-lang="ko">소개 페이지</a><a href="index.html" data-lang="en">About</a></span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const ko = document.getElementById('btnKo');
+  const en = document.getElementById('btnEn');
+  function setLang(lang) {
+    root.setAttribute('data-active', lang);
+    root.setAttribute('lang', lang);
+    ko.classList.toggle('on', lang === 'ko');
+    en.classList.toggle('on', lang === 'en');
+    document.title = lang === 'ko'
+      ? '개인정보 처리방침 — AI Token Monitor'
+      : 'Privacy Policy — AI Token Monitor';
+  }
+  ko.onclick = () => setLang('ko');
+  en.onclick = () => setLang('en');
+  setLang('ko');
+})();
+</script>
+</body>
+</html>
