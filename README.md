@@ -13,6 +13,12 @@
   <img src="docs/screenshot.png" width="420" alt="AI Token Monitor 스크린샷" />
 </p>
 
+<p align="center">
+  <a href="https://jtech-co.github.io/AI-Token-Monitor/docs/"><strong>소개 페이지 (인터랙티브 데모)</strong></a>
+  ·
+  <a href="https://jtech-co.github.io/AI-Token-Monitor/docs/privacy.html"><strong>개인정보 처리방침</strong></a>
+</p>
+
 **주요 기능**
 
 - **실시간 추적**: 로그 파일 변경 즉시 갱신(0.5초 디바운스) + 60초 폴백 폴링, mtime 기반 증분 파싱
@@ -90,4 +96,6 @@ ai-token-monitor/
 
 ## 5. 정보 (Info)
 
+- **소개 페이지**: [jtech-co.github.io/AI-Token-Monitor/docs](https://jtech-co.github.io/AI-Token-Monitor/docs/) — 실제 UI를 재현한 인터랙티브 데모
+- **개인정보 처리방침**: [privacy.html](https://jtech-co.github.io/AI-Token-Monitor/docs/privacy.html) (한국어/English)
 - **License**: MIT
