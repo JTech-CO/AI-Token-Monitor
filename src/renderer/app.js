@@ -26,7 +26,6 @@ const LIMITS = {
 const DAY = 86400_000;
 
 // ─── 포맷터 ───────────────────────────────────────────────────────────────────
-// 토큰 수: k / M / B / T
 function fmtTok(n) {
   if (n == null || isNaN(n)) return '—';
   const abs = Math.abs(n);
@@ -38,7 +37,6 @@ function fmtTok(n) {
   return String(Math.round(n));
 }
 
-// 금액: USD 기본, KRW 토글 (실시간 환율, 실패 시 고정 1540)
 function fmtMoney(usd) {
   if (usd == null || isNaN(usd)) return '—';
   const sign = usd < 0 ? '-' : '';
@@ -68,7 +66,6 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// DPR 대응 캔버스 셋업 → 2d 컨텍스트 반환
 function setupCanvas(canvas, cssW, cssH) {
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.round(cssW * dpr);
@@ -432,7 +429,6 @@ function renderPeriod(d) {
     : offset === 0 ? (mode === 'week' ? 'THIS WEEK' : 'THIS MONTH')
                    : `${fmtD(start)} – ${fmtD(end - DAY)}`;
 
-  // all 모드에서는 기간 이동 화살표 비활성화
   document.getElementById('periodPrev').disabled = isAll;
   document.getElementById('periodNext').disabled = isAll;
 
@@ -461,7 +457,6 @@ function renderPeriod(d) {
 }
 
 // ─── 이벤트 바인딩 ────────────────────────────────────────────────────────────
-// 접기/펼치기 (컴팩트 모드: TODAY 요약만 표시)
 document.getElementById('btnCompact').onclick = () => {
   state.compact = !state.compact;
   document.getElementById('app').classList.toggle('compact', state.compact);
@@ -472,17 +467,15 @@ document.getElementById('btnCompact').onclick = () => {
 };
 document.getElementById('btnClose').onclick = () => window.api.close();
 
-// 통화 토글 (USD ⇄ KRW)
 document.getElementById('btnCurrency').onclick = () => {
   state.currency = state.currency === 'usd' ? 'krw' : 'usd';
   const btn = document.getElementById('btnCurrency');
   btn.textContent = state.currency.toUpperCase();
   btn.classList.toggle('krw', state.currency === 'krw');
-  if (state.currency === 'krw') loadFx();   // 전환 시 환율 갱신 시도
+  if (state.currency === 'krw') loadFx();
   render();
 };
 
-// 프로바이더 탭
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -492,7 +485,6 @@ document.querySelectorAll('.tab').forEach(tab => {
   };
 });
 
-// 차트 range
 document.querySelectorAll('[data-range]').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('active'));
@@ -502,7 +494,6 @@ document.querySelectorAll('[data-range]').forEach(btn => {
   };
 });
 
-// 차트 metric
 document.querySelectorAll('[data-metric]').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('[data-metric]').forEach(b => b.classList.remove('active2'));
@@ -512,7 +503,6 @@ document.querySelectorAll('[data-metric]').forEach(btn => {
   };
 });
 
-// 히트맵 연도 네비게이션 (데이터 시작 연도 2026 하한)
 document.getElementById('heatPrev').onclick = () => {
   if (state.heatYear > MIN_HEAT_YEAR) { state.heatYear--; renderHeatmap(); }
 };
@@ -520,7 +510,6 @@ document.getElementById('heatNext').onclick = () => {
   if (state.heatYear < new Date().getFullYear()) { state.heatYear++; renderHeatmap(); }
 };
 
-// 기간 네비게이션
 document.getElementById('periodPrev').onclick = () => { state.periodOffset++; if (state.data) renderPeriod(state.data); };
 document.getElementById('periodNext').onclick = () => {
   if (state.periodOffset > 0) { state.periodOffset--; if (state.data) renderPeriod(state.data); }
