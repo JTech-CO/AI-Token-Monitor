@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-active="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,9 +52,25 @@ a:hover { text-decoration: underline; }
 }
 .site-name { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: var(--text-muted); display: flex; align-items: center; gap: 9px; }
 .site-logo { width: 24px; height: 24px; display: block; }
-.site-nav { display: flex; gap: 18px; font-size: 12px; }
+.site-nav { display: flex; gap: 18px; font-size: 12px; align-items: center; }
 .site-nav a { color: var(--text-muted); }
 .site-nav a:hover { color: var(--text); text-decoration: none; }
+
+.lang-switch { display: flex; gap: 5px; margin-left: 6px; }
+.lang-btn {
+  min-width: 34px; height: 24px; padding: 0 8px;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+.lang-btn:hover { background: var(--bg-input); color: var(--text); }
+.lang-btn.on { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* 언어 전환: html[data-active]에 맞는 블록만 표시 */
+[data-lang] { display: none; }
+html[data-active="ko"] [data-lang="ko"] { display: revert; }
+html[data-active="en"] [data-lang="en"] { display: revert; }
 
 .hero { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; }
 .hero-copy { flex: 1 1 380px; min-width: 320px; }
@@ -80,12 +96,23 @@ a:hover { text-decoration: underline; }
 .btn-primary:hover { background: #235233; color: var(--accent); }
 
 .install {
+  position: relative;
   background: var(--bg-panel); border: 1px solid var(--border);
   border-radius: 6px; padding: 14px 18px; font-size: 12.5px;
   color: var(--text-muted); overflow-x: auto; white-space: pre; line-height: 1.9;
 }
 .install .p { color: var(--accent); }
 .install .c { color: var(--text-dim); }
+
+.copy-btn {
+  position: absolute; top: 10px; right: 10px;
+  padding: 3px 10px;
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;
+  cursor: pointer; transition: background 120ms, color 120ms, border-color 120ms;
+}
+.copy-btn:hover { color: var(--text); border-color: var(--text-muted); }
+.copy-btn.ok { color: var(--accent); border-color: var(--accent-dim); background: var(--accent-dim); }
 
 .demo-col { flex: 0 0 auto; }
 .demo-caption { font-size: 11px; color: var(--text-dim); margin-top: 12px; max-width: 420px; line-height: 1.6; }
@@ -312,20 +339,33 @@ canvas { display: block; }
     <nav class="site-nav">
       <a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a>
       <a href="https://github.com/JTech-CO/AI-Token-Monitor#readme">README</a>
-      <a href="Privacy Policy.html">개인정보 처리방침</a>
+      <a href="Privacy Policy.html" data-lang="ko">개인정보 처리방침</a>
+      <a href="Privacy Policy.html" data-lang="en">Privacy Policy</a>
+      <div class="lang-switch">
+        <button class="lang-btn on" id="btnKo">한국어</button>
+        <button class="lang-btn" id="btnEn">EN</button>
+      </div>
     </nav>
   </header>
 
   <main class="hero">
     <div class="hero-copy">
-      <h1>터미널 옆,<br>토큰 사용량 계기판.</h1>
-      <p class="hero-tag">Claude Code · Codex CLI 토큰 사용량과 비용을<br>실시간으로 보여주는 데스크톱 오버레이</p>
-      <p class="desc">
+      <h1 data-lang="ko">터미널 옆,<br>토큰 사용량 계기판.</h1>
+      <h1 data-lang="en">Your token usage,<br>right beside the terminal.</h1>
+      <p class="hero-tag" data-lang="ko">Claude Code · Codex CLI 토큰 사용량과 비용을<br>실시간으로 보여주는 데스크톱 오버레이</p>
+      <p class="hero-tag" data-lang="en">A desktop overlay that shows Claude Code · Codex CLI<br>token usage and cost in real time</p>
+      <p class="desc" data-lang="ko">
         로컬에 기록되는 세션 로그(JSONL)를 직접 파싱해 <strong>약 0.5초 내에 갱신</strong>됩니다.
         모든 데이터는 로컬에서만 처리되며, 개인 사용부터 <strong>수 T(조) 토큰 규모의
         헤비 유저·팀 사용량</strong>까지 같은 화면에서 확인할 수 있습니다.
       </p>
-      <ul class="feat">
+      <p class="desc" data-lang="en">
+        It parses the session logs (JSONL) written on your machine and <strong>updates within
+        about 0.5s</strong>. Everything is processed locally — from personal use up to
+        <strong>heavy-user and team workloads in the multi-trillion token range</strong>,
+        all on a single screen.
+      </p>
+      <ul class="feat" data-lang="ko">
         <li><strong>정확한 집계</strong> — 중복 로그 dedup, 캐시 읽기/쓰기 단가 분리 계산</li>
         <li><strong>프로바이더 구분</strong> — ALL / CLAUDE / CODEX 탭, 일별 스택 바 차트</li>
         <li><strong>인포그래픽</strong> — 활동 히트맵, 모델별 분석, 캐시 효율 도넛</li>
@@ -333,11 +373,19 @@ canvas { display: block; }
         <li><strong>통화 전환</strong> — USD 기본, 실시간 환율 KRW 토글</li>
         <li><strong>트레이 상주</strong> — 컴팩트 모드, 휠 1틱 = 1페이지 스크롤</li>
       </ul>
+      <ul class="feat" data-lang="en">
+        <li><strong>Accurate accounting</strong> — log deduplication, separate cache read/write pricing</li>
+        <li><strong>Per-provider view</strong> — ALL / CLAUDE / CODEX tabs, daily stacked bar chart</li>
+        <li><strong>Infographics</strong> — activity heatmap, per-model breakdown, cache efficiency donut</li>
+        <li><strong>Period stats</strong> — weekly / monthly / all-time, k · M · B · T units</li>
+        <li><strong>Currency toggle</strong> — USD by default, live-rate KRW conversion</li>
+        <li><strong>Tray resident</strong> — compact mode, one wheel tick = one page</li>
+      </ul>
       <div class="btn-row">
-        <a class="btn btn-primary" href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub에서 받기</a>
-        <a class="btn" href="Privacy Policy.html">개인정보 처리방침</a>
+        <a class="btn btn-primary" href="https://github.com/JTech-CO/AI-Token-Monitor"><span data-lang="ko">GitHub에서 받기</span><span data-lang="en">Get it on GitHub</span></a>
+        <a class="btn" href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span></a>
       </div>
-      <div class="install"><span class="c"># 설치 및 실행</span>
+      <div class="install"><button class="copy-btn" id="btnCopy" type="button">전체복사</button><span class="c" data-lang="ko"># 설치 및 실행</span><span class="c" data-lang="en"># Install &amp; run</span>
 <span class="p">$</span> git clone https://github.com/JTech-CO/AI-Token-Monitor.git
 <span class="p">$</span> cd AI-Token-Monitor
 <span class="p">$</span> npm install
@@ -485,23 +533,27 @@ canvas { display: block; }
                 <span class="log-path-text">CODEX ~/.codex/sessions/**/*.jsonl</span>
               </div>
             </div>
-            <div class="fx-info">FX 1 USD = ₩1,540 (고정) · 이 위젯은 임의 생성 데이터로 동작하는 데모입니다</div>
+            <div class="fx-info"><span data-lang="ko">FX 1 USD = ₩1,540 (고정) · 이 위젯은 임의 생성 데이터로 동작하는 데모입니다</span><span data-lang="en">FX 1 USD = ₩1,540 (fixed) · This widget is a demo running on generated data</span></div>
           </section>
           </div><!-- /page 5 -->
 
         </div><!-- /scroll-body -->
       </div><!-- /#app -->
 
-      <p class="demo-caption">
+      <p class="demo-caption" data-lang="ko">
         ▲ 인터랙티브 데모 — 시드 기반으로 임의 생성한 2년치 팀 규모 사용량입니다
         (실제 사용자 데이터 아님). 탭 전환, 휠 스크롤, 기간·통화 전환을 직접 사용해 보세요.
+      </p>
+      <p class="demo-caption" data-lang="en">
+        ▲ Interactive demo — two years of team-scale usage generated from a fixed seed
+        (not real user data). Try the tabs, wheel scrolling, and the period/currency toggles.
       </p>
     </div>
   </main>
 
   <footer class="site-foot">
     <span>© 2026 JTech-CO · MIT License</span>
-    <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="Privacy Policy.html">개인정보 처리방침</a></span>
+    <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span></a></span>
   </footer>
 </div>
 
@@ -659,11 +711,18 @@ const LIMITS = { sessionTokens: 5e9, weekCost: 120000 };
 const FX_RATE = 1540;
 const MIN_HEAT_YEAR = new Date(startT).getFullYear();
 
-// ═══ 상태 · 포맷터 (앱과 동일) ═══
+// ═══ 상태 · 포맷터 ═══
 const state = {
   provider: 'all', chartRange: 7, chartMetric: 'tokens',
   heatYear: now.getFullYear(), periodMode: 'week', periodOffset: 0, currency: 'usd',
 };
+
+// UI 언어 (정적 텍스트는 [data-lang] CSS로, JS 생성 문자열은 STR로 전환)
+const STR = {
+  ko: { copy: '전체복사', copied: '복사됨', savings: '캐시 절감액' },
+  en: { copy: 'Copy all', copied: 'Copied', savings: 'cache savings' },
+};
+let uiLang = 'ko';
 
 function fmtTok(n) {
   if (n == null || isNaN(n)) return '—';
@@ -897,7 +956,7 @@ function renderDonut(d) {
     '<span class="cache-stat-val" style="color:var(--accent)">' + hit.toFixed(1) + '%</span></div>' +
     '<div class="cache-stat-item"><span class="cache-stat-label">miss rate</span>' +
     '<span class="cache-stat-val">' + (100 - hit).toFixed(1) + '%</span></div>' +
-    '<div class="cache-stat-item"><span class="cache-stat-label">캐시 절감액</span>' +
+    '<div class="cache-stat-item"><span class="cache-stat-label">' + STR[uiLang].savings + '</span>' +
     '<span class="cache-stat-val" style="color:var(--accent)">' + fmtMoney(d.cacheSavings) + '</span></div>';
 }
 
@@ -987,6 +1046,49 @@ $('btnCurrency').onclick = () => {
   btn.textContent = state.currency.toUpperCase();
   btn.classList.toggle('krw', state.currency === 'krw');
   render();
+};
+
+// 언어 전환 (한국어 기본 / EN)
+function setLang(lang) {
+  uiLang = lang;
+  document.documentElement.setAttribute('data-active', lang);
+  document.documentElement.setAttribute('lang', lang);
+  $('btnKo').classList.toggle('on', lang === 'ko');
+  $('btnEn').classList.toggle('on', lang === 'en');
+  $('btnCopy').textContent = STR[lang].copy;
+  renderDonut(AGG[state.provider]);
+}
+$('btnKo').onclick = () => setLang('ko');
+$('btnEn').onclick = () => setLang('en');
+
+// 설치 명령 전체복사
+const INSTALL_CMDS = [
+  'git clone https://github.com/JTech-CO/AI-Token-Monitor.git',
+  'cd AI-Token-Monitor',
+  'npm install',
+  'npm start',
+].join('\n') + '\n';
+
+$('btnCopy').onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(INSTALL_CMDS);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = INSTALL_CMDS;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+  const btn = $('btnCopy');
+  btn.textContent = STR[uiLang].copied;
+  btn.classList.add('ok');
+  setTimeout(() => {
+    btn.textContent = STR[uiLang].copy;
+    btn.classList.remove('ok');
+  }, 1600);
 };
 
 // 휠 스크롤: 1틱 = 1페이지
