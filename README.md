@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.svg" width="96" alt="AI Token Monitor 로고" />
+</p>
+
 # AI Token Monitor
 
 > **Claude Code · Codex CLI 토큰 사용량과 비용을 실시간으로 보여주는 데스크톱 오버레이**
