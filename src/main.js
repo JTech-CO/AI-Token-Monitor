@@ -105,8 +105,8 @@ function toggleVisibility() {
 }
 
 // ─── 환율 (USD → KRW) ─────────────────────────────────────────────────────────
-const FX_FALLBACK = 1540;
-const FX_TTL = 24 * 3600_000;      // 성공 시 1일 캐시
+const FX_FALLBACK = 1520;
+const FX_TTL = 6 * 3600_000;       // 성공 시 6시간 캐시
 const FX_RETRY = 10 * 60_000;      // 실패 시 10분 후 재시도
 let fxCache = { rate: FX_FALLBACK, source: 'fallback', fetchedAt: 0 };
 let fxInFlight = null;

@@ -10,7 +10,7 @@ const state = {
   periodOffset: 0,
   currency:     'usd',      // 'usd' | 'krw'
   compact:      false,
-  fx:           { rate: 1540, source: 'fallback' },
+  fx:           { rate: 1520, source: 'fallback' },
   data:         null,
 };
 
