@@ -8,9 +8,10 @@ const state = {
   heatYear:     new Date().getFullYear(),
   periodMode:   'week',
   periodOffset: 0,
-  currency:     'usd',      // 'usd' | 'krw'
+  modelRange:   'all',      // 'week' | 'month' | 'all'
+  currency:     'usd',      // 'usd' | 'krw' | 'jpy'
   compact:      false,
-  fx:           { rate: 1520, source: 'fallback' },
+  fx:           { rates: { KRW: 1520, JPY: 160 }, source: 'fallback', fetchedAt: 0 },
   data:         null,
 };
 
@@ -41,11 +42,12 @@ function fmtMoney(usd) {
   if (usd == null || isNaN(usd)) return '—';
   const sign = usd < 0 ? '-' : '';
   const a = Math.abs(usd);
-  if (state.currency === 'krw') {
-    const w = a * state.fx.rate;
-    if (w >= 1e6) return sign + '₩' + (w / 1e6).toFixed(2) + 'M';
-    if (w >= 1e3) return sign + '₩' + (w / 1e3).toFixed(1) + 'k';
-    return sign + '₩' + Math.round(w);
+  if (state.currency === 'krw' || state.currency === 'jpy') {
+    const symbol = state.currency === 'krw' ? '₩' : '¥';
+    const v = a * (state.currency === 'krw' ? state.fx.rates.KRW : state.fx.rates.JPY);
+    if (v >= 1e6) return sign + symbol + (v / 1e6).toFixed(2) + 'M';
+    if (v >= 1e3) return sign + symbol + (v / 1e3).toFixed(1) + 'k';
+    return sign + symbol + Math.round(v);
   }
   if (a >= 1000) return sign + '$' + (a / 1000).toFixed(2) + 'k';
   if (a >= 10)   return sign + '$' + a.toFixed(2);
@@ -112,10 +114,17 @@ async function loadPaths() {
 
 function renderFxInfo() {
   const el = document.getElementById('fxInfo');
-  const { rate, source } = state.fx;
-  el.innerHTML = source === 'live'
-    ? `FX <span class="fx-live">1 USD = ₩${Math.round(rate).toLocaleString()}</span> (live)`
-    : `FX 1 USD = ₩${Math.round(rate).toLocaleString()} (고정)`;
+  const { rates, source, fetchedAt } = state.fx;
+  const pair = `1 USD = ₩${Math.round(rates.KRW).toLocaleString()} · ¥${rates.JPY.toFixed(1)}`;
+  if (source === 'live') {
+    el.innerHTML = `FX <span class="fx-live">${pair}</span> (live)`;
+  } else if (source === 'cached' && fetchedAt > 0) {
+    const d = new Date(fetchedAt);
+    const stamp = `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    el.innerHTML = `FX ${pair} (as of ${stamp})`;
+  } else {
+    el.innerHTML = `FX ${pair} (default)`;
+  }
 }
 
 // ─── 전체 렌더 ────────────────────────────────────────────────────────────────
@@ -313,7 +322,7 @@ function renderHeatmap2D(grid, weeks, maxVal) {
 // ─── 모델 분석 ────────────────────────────────────────────────────────────────
 function renderModels(d) {
   const el = document.getElementById('modelList');
-  const entries = Object.entries(d.modelStats);
+  const entries = Object.entries(d.modelStats[state.modelRange] || {});
   if (!entries.length) { el.innerHTML = '<div class="empty">no data</div>'; return; }
 
   entries.sort((a, b) => b[1].cost - a[1].cost);
@@ -390,7 +399,7 @@ function renderDonut(d) {
       <span class="cache-stat-val">${(100 - hit).toFixed(1)}%</span>
     </div>
     <div class="cache-stat-item">
-      <span class="cache-stat-label">${(d.cacheSavings || 0) >= 0 ? '캐시 절감액' : '캐시 순비용'}</span>
+      <span class="cache-stat-label">${(d.cacheSavings || 0) >= 0 ? 'Cache Savings' : 'Cache Net Cost'}</span>
       <span class="cache-stat-val" style="color:${(d.cacheSavings || 0) >= 0 ? 'var(--accent)' : 'var(--warn)'}">${fmtMoney(d.cacheSavings || 0)}</span>
     </div>
   `;
@@ -462,17 +471,18 @@ document.getElementById('btnCompact').onclick = () => {
   document.getElementById('app').classList.toggle('compact', state.compact);
   const btn = document.getElementById('btnCompact');
   btn.textContent = state.compact ? '▴' : '─';
-  btn.title = state.compact ? '펼치기' : '접기';
+  btn.title = state.compact ? 'Expand' : 'Collapse';
   window.api.setCompact(state.compact);
 };
 document.getElementById('btnClose').onclick = () => window.api.close();
 
+// USD → KRW → JPY 순환
 document.getElementById('btnCurrency').onclick = () => {
-  state.currency = state.currency === 'usd' ? 'krw' : 'usd';
+  state.currency = state.currency === 'usd' ? 'krw' : state.currency === 'krw' ? 'jpy' : 'usd';
   const btn = document.getElementById('btnCurrency');
   btn.textContent = state.currency.toUpperCase();
-  btn.classList.toggle('krw', state.currency === 'krw');
-  if (state.currency === 'krw') loadFx();
+  btn.classList.toggle('krw', state.currency !== 'usd');
+  if (state.currency !== 'usd') loadFx();
   render();
 };
 
@@ -500,6 +510,16 @@ document.querySelectorAll('[data-metric]').forEach(btn => {
     btn.classList.add('active2');
     state.chartMetric = btn.dataset.metric;
     if (state.data) renderDailyChart(state.data);
+  };
+});
+
+// 모델 통계 기간 (wk / mo / all)
+document.querySelectorAll('[data-mrange]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('[data-mrange]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.modelRange = btn.dataset.mrange;
+    if (state.data) renderModels(state.data);
   };
 });
 

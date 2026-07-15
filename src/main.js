@@ -104,14 +104,38 @@ function toggleVisibility() {
   if (mainWindow.isVisible()) { mainWindow.hide(); } else { mainWindow.show(); }
 }
 
-// ─── 환율 (USD → KRW) ─────────────────────────────────────────────────────────
-const FX_FALLBACK = 1520;
-const FX_TTL = 6 * 3600_000;       // 성공 시 6시간 캐시
+// ─── 환율 (USD → KRW · JPY) ───────────────────────────────────────────────────
+// 조회 실패 시 가장 최근에 성공한 환율을 유지 (디스크에 저장 → 재시작 후에도 복원).
+// FX_SEED는 한 번도 조회에 성공한 적 없는 최초 실행에서만 쓰는 기본값.
+const FX_SEED = { KRW: 1520, JPY: 160 };
+const FX_TTL = 6 * 3600_000;       // 성공값 6시간 캐시
 const FX_RETRY = 10 * 60_000;      // 실패 시 10분 후 재시도
-let fxCache = { rate: FX_FALLBACK, source: 'fallback', fetchedAt: 0 };
+const FX_STORE = path.join(app.getPath('userData'), 'fx-cache.json');
+
+function loadFxStore() {
+  try {
+    const j = JSON.parse(fs.readFileSync(FX_STORE, 'utf8'));
+    if (j && Number(j.rates?.KRW) > 0 && Number(j.rates?.JPY) > 0 && Number(j.fetchedAt) > 0) {
+      return { rates: { KRW: Number(j.rates.KRW), JPY: Number(j.rates.JPY) }, fetchedAt: Number(j.fetchedAt) };
+    }
+  } catch {}
+  return null;
+}
+
+function saveFxStore() {
+  try {
+    fs.writeFileSync(FX_STORE, JSON.stringify({ rates: fxCache.rates, fetchedAt: fxCache.fetchedAt }));
+  } catch {}
+}
+
+const fxStored = loadFxStore();
+let fxCache = fxStored
+  ? { rates: fxStored.rates, source: Date.now() - fxStored.fetchedAt <= FX_TTL ? 'live' : 'cached', fetchedAt: fxStored.fetchedAt }
+  : { rates: { ...FX_SEED }, source: 'fallback', fetchedAt: 0 };
+let fxLastAttempt = 0;
 let fxInFlight = null;
 
-function fetchFxRate() {
+function fetchFxRates() {
   return new Promise((resolve) => {
     const req = https.get('https://open.er-api.com/v6/latest/USD', { timeout: 5000 }, (res) => {
       let body = '';
@@ -119,8 +143,9 @@ function fetchFxRate() {
       res.on('end', () => {
         try {
           const json = JSON.parse(body);
-          const rate = Number(json?.rates?.KRW);
-          if (rate > 0) return resolve({ rate, source: 'live', fetchedAt: Date.now() });
+          const krw = Number(json?.rates?.KRW);
+          const jpy = Number(json?.rates?.JPY);
+          if (krw > 0 && jpy > 0) return resolve({ KRW: krw, JPY: jpy });
         } catch {}
         resolve(null);
       });
@@ -131,13 +156,20 @@ function fetchFxRate() {
 }
 
 async function getFx() {
-  const age = Date.now() - fxCache.fetchedAt;
-  const ttl = fxCache.source === 'live' ? FX_TTL : FX_RETRY;
-  if (age > ttl) {
+  const now = Date.now();
+  const stale = now - fxCache.fetchedAt > FX_TTL;      // 데이터 신선도
+  const canRetry = now - fxLastAttempt > FX_RETRY;     // 재시도 스로틀
+  if (stale && canRetry) {
     if (!fxInFlight) {
-      fxInFlight = fetchFxRate()
-        .then((fresh) => {
-          fxCache = fresh || { rate: FX_FALLBACK, source: 'fallback', fetchedAt: Date.now() };
+      fxLastAttempt = now;
+      fxInFlight = fetchFxRates()
+        .then((rates) => {
+          if (rates) {
+            fxCache = { rates, source: 'live', fetchedAt: Date.now() };
+            saveFxStore();
+          } else if (fxCache.fetchedAt > 0) {
+            fxCache.source = 'cached'; // 최근 성공값 유지
+          }
         })
         .finally(() => { fxInFlight = null; });
     }

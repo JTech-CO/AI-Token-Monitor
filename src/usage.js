@@ -247,6 +247,12 @@ function aggregate(entries) {
   const sessionCutoff = now - 5 * 3600_000;
   const weekCutoff = now - 7 * DAY;
 
+  // 모델 통계용 기간 경계 — PERIOD 섹션과 동일하게 로컬 자정 기준 (오늘 포함 7일/30일)
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  const modelWkStart = todayStart.getTime() - 6 * DAY;
+  const modelMoStart = todayStart.getTime() - 29 * DAY;
+
   // 최근 30일은 0으로 미리 채움 (차트 연속성)
   const daily = {};
   for (let i = 29; i >= 0; i--) {
@@ -254,8 +260,19 @@ function aggregate(entries) {
   }
 
   const heatmap = {};
-  const modelStats = {};
+  const modelStats = { week: {}, month: {}, all: {} };
   const seen = new Set();
+
+  function addModel(bucket, mKey, e, cost) {
+    if (!bucket[mKey]) bucket[mKey] = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, cost: 0, requests: 0 };
+    const ms = bucket[mKey];
+    ms.input += e.input;
+    ms.output += e.output;
+    ms.cacheRead += e.cacheRead;
+    ms.cacheCreate += e.cacheCreate;
+    ms.cost += cost;
+    ms.requests += 1;
+  }
 
   let sessionTokens = 0, sessionCost = 0;
   let weekTokens = 0, weekCost = 0;
@@ -286,14 +303,9 @@ function aggregate(entries) {
     heatmap[key] = (heatmap[key] || 0) + tokens;
 
     const mKey = `${e.provider}/${e.model}`;
-    if (!modelStats[mKey]) modelStats[mKey] = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, cost: 0, requests: 0 };
-    const ms = modelStats[mKey];
-    ms.input += e.input;
-    ms.output += e.output;
-    ms.cacheRead += e.cacheRead;
-    ms.cacheCreate += e.cacheCreate;
-    ms.cost += cost;
-    ms.requests += 1;
+    addModel(modelStats.all, mKey, e, cost);
+    if (e.ts >= modelMoStart) addModel(modelStats.month, mKey, e, cost);
+    if (e.ts >= modelWkStart) addModel(modelStats.week, mKey, e, cost);
 
     totalInput += e.input;
     totalCacheRead += e.cacheRead;

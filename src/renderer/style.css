@@ -378,12 +378,12 @@ canvas { display: block; }
 /* ─── Period nav ─────────────────────────────────────────────────────── */
 .period-label { font-size: 12px; color: var(--text-muted); flex: 1; text-align: center; letter-spacing: 0.08em; }
 
-.period-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.period-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .period-stat {
   background: var(--bg-raised);
   border: 1px solid var(--border-dim);
   border-radius: var(--radius);
-  padding: 10px 12px;
+  padding: 8px 12px;
 }
 .period-stat-label { font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 5px; }
 .period-stat-val   { font-size: 17px; font-weight: 600; color: var(--text); }

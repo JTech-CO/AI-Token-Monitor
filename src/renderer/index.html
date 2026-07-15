@@ -16,9 +16,9 @@
       <span class="status-dot" id="statusDot"></span>
     </div>
     <div class="titlebar-controls">
-      <button class="ctrl-btn ctrl-currency" id="btnCurrency" title="통화 전환">USD</button>
-      <button class="ctrl-btn" id="btnCompact" title="접기">─</button>
-      <button class="ctrl-btn ctrl-close" id="btnClose" title="숨기기">×</button>
+      <button class="ctrl-btn ctrl-currency" id="btnCurrency" title="Switch currency">USD</button>
+      <button class="ctrl-btn" id="btnCompact" title="Collapse">─</button>
+      <button class="ctrl-btn ctrl-close" id="btnClose" title="Hide to tray">×</button>
     </div>
   </header>
 
@@ -124,7 +124,14 @@
     <div class="page">
     <!-- ── 모델별 분석 ── -->
     <section class="section">
-      <div class="section-label">MODEL BREAKDOWN</div>
+      <div class="section-header">
+        <span class="section-label">MODEL BREAKDOWN</span>
+        <div class="chart-controls">
+          <button class="chip" data-mrange="week">wk</button>
+          <button class="chip" data-mrange="month">mo</button>
+          <button class="chip active" data-mrange="all">all</button>
+        </div>
+      </div>
       <div id="modelList" class="model-list"></div>
       <div class="chart-legend">
         <span class="legend-item"><span class="legend-dot dot-input"></span>input</span>
