@@ -92,6 +92,7 @@ th { color: var(--text-dim); font-size: 11px; letter-spacing: 0.1em; font-weight
 [data-lang] { display: none; }
 html[data-active="ko"] [data-lang="ko"] { display: revert; }
 html[data-active="en"] [data-lang="en"] { display: revert; }
+html[data-active="ja"] [data-lang="ja"] { display: revert; }
 </style>
 </head>
 <body>
@@ -105,6 +106,7 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
     <div style="display:flex; gap:5px;">
       <button class="lang-btn on" id="btnKo">한국어</button>
       <button class="lang-btn" id="btnEn">EN</button>
+      <button class="lang-btn" id="btnJa">日本語</button>
     </div>
   </header>
 
@@ -140,9 +142,9 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
       <div class="section-label">3. 네트워크 통신</div>
       <p>본 앱이 수행하는 네트워크 요청은 <strong>환율 조회 1건</strong>이 유일합니다.</p>
       <ul>
-        <li>대상: <code>open.er-api.com</code> (USD→KRW 환율, 1일 1회 수준)</li>
+        <li>대상: <code>open.er-api.com</code> (USD→KRW·JPY 환율, 6시간 간격 수준)</li>
         <li>전송되는 데이터: 없음 — 파라미터 없는 단순 조회(GET) 요청입니다.</li>
-        <li>요청 실패 시 내장된 고정 환율(1,520원)을 사용하며 앱은 완전히 오프라인으로 동작합니다.</li>
+        <li>요청 실패 시 가장 최근에 성공한 환율을 유지하며(환율 값만 로컬에 저장, 저장된 값이 없으면 내장 기본값 사용) 앱은 완전히 오프라인으로도 동작합니다.</li>
       </ul>
 
       <div class="section-label">4. 제3자 제공 및 위탁</div>
@@ -191,9 +193,9 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
       <p>The App makes exactly <strong>one kind of network request</strong>: an exchange-rate
       lookup.</p>
       <ul>
-        <li>Endpoint: <code>open.er-api.com</code> (USD→KRW rate, roughly once per day)</li>
+        <li>Endpoint: <code>open.er-api.com</code> (USD→KRW·JPY rates, roughly every six hours)</li>
         <li>Data transmitted: none — a plain parameterless GET request.</li>
-        <li>If the request fails, a built-in fixed rate (₩1,520) is used and the App works fully offline.</li>
+        <li>If the request fails, the most recently fetched rates are kept (only the rate values are stored locally; a built-in default is used when nothing has been fetched yet) and the App still works fully offline.</li>
       </ul>
 
       <div class="section-label">4. Third-Party Sharing</div>
@@ -212,9 +214,42 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
       <a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">GitHub Issues</a>.</p>
     </div>
 
+    <!-- ─────── 日本語 ─────── -->
+    <div data-lang="ja">
+  <h1>Privacy Policy</h1>
+  <div class="updated">施行日: 2026-07-03</div>
+  <p><strong>AI Token Monitor</strong>(以下「本アプリ」)は、ユーザーのコンピューター上でのみ動作するローカルデスクトップアプリケーションです。本アプリは<strong>いかなる個人情報も収集・保存・送信しません。</strong>本文書は、アプリがアクセスするデータとその処理方法を透明性をもってお知らせするために作成されました。</p>
+  <div class="section-label">1. 収集する個人情報</div>
+  <p><strong>ありません。</strong>本アプリはアカウント、ログイン、テレメトリー、分析ツール、広告識別子、Cookieを一切使用せず、開発者を含むいかなる外部の主体にもデータを送信しません。</p>
+  <div class="section-label">2. ローカルでアクセスするデータ</div>
+  <p>本アプリは使用量統計の計算のため、以下のログファイルに<strong>読み取り専用</strong>でアクセスします。これらのファイルはClaude CodeとCodex CLIがユーザーのコンピューター上に生成したものであり、本アプリが内容を修正・削除・アップロードすることはありません。</p>
+  <table>
+    <tr><th>対象</th><th>パス</th><th>用途</th></tr>
+    <tr><td>Claude Code ログ</td><td><code>~/.claude/projects/**/*.jsonl</code></td><td>トークン数・コストの集計</td></tr>
+    <tr><td>Codex CLI ログ</td><td><code>~/.codex/sessions/**/*.jsonl</code></td><td>トークン数・コストの集計</td></tr>
+  </table>
+  <p>集計結果はメモリ上でのみ処理され、別のファイルや外部サーバーに保存されることはありません。ログ内の会話内容(プロンプト・応答テキスト)は解析の対象ではなく、トークン数・モデル名・タイムスタンプのフィールドのみを読み取ります。</p>
+  <div class="section-label">3. ネットワーク通信</div>
+  <p>本アプリが行うネットワークリクエストは、<strong>為替レートの取得1件</strong>のみです。</p>
+  <ul>
+    <li>対象: <code>open.er-api.com</code>(USD→KRW・JPYの為替レート、約6時間間隔)</li>
+    <li>送信されるデータ: なし — パラメータのない単純な取得(GET)リクエストです。</li>
+    <li>リクエストが失敗した場合は、直近に取得に成功した為替レートを維持し(為替レートの値のみローカルに保存し、保存された値がない場合は内蔵のデフォルト値を使用)、アプリは完全にオフラインでも動作します。</li>
+  </ul>
+  <div class="section-label">4. 第三者への提供および委託</div>
+  <p>収集する情報がないため、第三者への提供、処理の委託、国外への移転は発生しません。</p>
+  <div class="section-label">5. ユーザーによるコントロール</div>
+  <ul>
+    <li>本アプリはオープンソースであり、全ソースコードを誰でも検証できます。</li>
+    <li>アプリを削除すると、アプリに関連するデータはすべて削除されます。ログファイルは各CLIツールの管理下にあり、本アプリとは無関係に維持されます。</li>
+  </ul>
+  <div class="section-label">6. ポリシーの変更およびお問い合わせ</div>
+  <p>本ポリシーが変更される場合は、リポジトリ内の本文書を通じてお知らせします。お問い合わせはGitHubリポジトリの<a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">Issues</a>までお願いいたします。</p>
+</div>
+
     <div class="footer">
       <span>AI Token Monitor · MIT License</span>
-      <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="index.html" data-lang="ko">소개 페이지</a><a href="index.html" data-lang="en">About</a></span>
+      <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="index.html" data-lang="ko">소개 페이지</a><a href="index.html" data-lang="en">About</a><a href="index.html" data-lang="ja">紹介ページ</a> · <a href="Terms of Service.html" data-lang="ko">이용약관</a><a href="Terms of Service.html" data-lang="en">Terms of Service</a><a href="Terms of Service.html" data-lang="ja">利用規約</a></span>
     </div>
 
   </main>
@@ -225,15 +260,24 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
   const root = document.documentElement;
   const ko = document.getElementById('btnKo');
   const en = document.getElementById('btnEn');
+  const ja = document.getElementById('btnJa');
   function setLang(lang) {
     root.setAttribute('data-active', lang);
     root.setAttribute('lang', lang);
     ko.classList.toggle('on', lang === 'ko');
     en.classList.toggle('on', lang === 'en');
+    ja.classList.toggle('on', lang === 'ja');
+    // 내부 페이지 링크에 현재 언어 전파
+    document.querySelectorAll('a[href^="index.html"], a[href^="Privacy Policy.html"], a[href^="Terms of Service.html"]').forEach(a => {
+      a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + lang);
+    });
   }
   ko.onclick = () => setLang('ko');
   en.onclick = () => setLang('en');
-  setLang('ko');
+  ja.onclick = () => setLang('ja');
+  // 초기 언어: URL ?lang= (소개 페이지 등에서 언어 유지한 채 진입)
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  setLang(['ko', 'en', 'ja'].includes(urlLang) ? urlLang : 'ko');
 })();
 </script>
 </body>

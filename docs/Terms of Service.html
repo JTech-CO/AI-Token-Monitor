@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" data-active="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terms of Service</title>
+<style>
+:root {
+  --bg:         #0a0a0a;
+  --bg-panel:   #0f0f0f;
+  --bg-raised:  #171717;
+  --bg-input:   #1e1e1e;
+  --border:     #2a2a2a;
+  --border-dim: #1f1f1f;
+  --text:       #e6e6e6;
+  --text-muted: #8a8a8a;
+  --text-dim:   #5c5c5c;
+  --accent:     #4ade80;
+  --accent-dim: #1a3d26;
+  --claude:     #d97706;
+  --codex:      #60a5fa;
+  --radius:     4px;
+  --font-mono:  ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+
+/* 타이틀바 — 앱과 동일한 구성 */
+.titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; height: 46px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+}
+.titlebar-left { display: flex; align-items: center; gap: 8px; }
+.app-name { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--text-muted); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.lang-btn {
+  min-width: 34px; height: 26px; padding: 0 9px;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+.lang-btn:hover { background: var(--bg-input); color: var(--text); }
+.lang-btn.on { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  padding: 28px 32px 36px;
+}
+
+h1 { font-size: 21px; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; }
+.updated { font-size: 12px; color: var(--text-dim); margin-bottom: 28px; }
+
+.section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  color: var(--text-dim); margin: 30px 0 10px;
+  padding-top: 22px; border-top: 1px solid var(--border-dim);
+}
+p { color: var(--text-muted); margin-bottom: 10px; }
+strong { color: var(--text); font-weight: 600; }
+ul { list-style: none; margin-bottom: 10px; }
+li { color: var(--text-muted); padding-left: 18px; position: relative; margin-bottom: 6px; }
+li::before { content: "–"; position: absolute; left: 2px; color: var(--accent); }
+code {
+  background: var(--bg-input); border: 1px solid var(--border-dim);
+  border-radius: 3px; padding: 1px 6px; font-size: 12px; color: var(--text);
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+th, td { text-align: left; padding: 8px 12px; border: 1px solid var(--border-dim); color: var(--text-muted); }
+th { color: var(--text-dim); font-size: 11px; letter-spacing: 0.1em; font-weight: 600; background: var(--bg-raised); }
+
+.footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-dim); font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+[data-lang] { display: none; }
+html[data-active="ko"] [data-lang="ko"] { display: revert; }
+html[data-active="en"] [data-lang="en"] { display: revert; }
+html[data-active="ja"] [data-lang="ja"] { display: revert; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="titlebar">
+    <div class="titlebar-left">
+      <span class="app-name">AI TOKEN MONITOR</span>
+      <span class="status-dot"></span>
+    </div>
+    <div style="display:flex; gap:5px;">
+      <button class="lang-btn on" id="btnKo">한국어</button>
+      <button class="lang-btn" id="btnEn">EN</button>
+      <button class="lang-btn" id="btnJa">日本語</button>
+    </div>
+  </header>
+
+  <main class="panel">
+
+    <!-- ─────────────── 한국어 ─────────────── -->
+    <div data-lang="ko">
+      <h1>Terms of Service</h1>
+      <div class="updated">시행일: 2026-07-15</div>
+
+      <p>본 이용약관(이하 "약관")은 <strong>AI Token Monitor</strong>(이하 "본 앱")의 사용에
+      적용됩니다. 본 앱을 설치하거나 사용하면 본 약관에 동의한 것으로 간주됩니다.
+      동의하지 않는 경우 사용을 중단하고 앱을 삭제하시기 바랍니다.</p>
+
+      <div class="section-label">1. 소프트웨어와 라이선스</div>
+      <p>본 앱은 <strong>MIT 라이선스</strong>로 배포되는 오픈소스 소프트웨어입니다.
+      소스 코드의 사용·복제·수정·배포는 MIT 라이선스 조건을 따르며, 라이선스 전문은 저장소의
+      <a href="https://github.com/JTech-CO/AI-Token-Monitor/blob/main/LICENSE">LICENSE</a>
+      파일에서 확인할 수 있습니다.</p>
+
+      <div class="section-label">2. 서비스의 성격</div>
+      <p>본 앱은 사용자의 컴퓨터에서만 동작하는 로컬 도구입니다. 계정·서버·유료 구독이 없으며,
+      개발자는 사용자의 데이터에 접근할 수 없습니다. 데이터 처리에 관한 자세한 내용은
+      <a href="Privacy Policy.html">개인정보 처리방침</a>을 참조하십시오.</p>
+
+      <div class="section-label">3. 비용 표시에 관한 고지</div>
+      <p>본 앱이 표시하는 비용은 각 제공사의 <strong>API 정가를 기준으로 한 추정치</strong>입니다.
+      구독 요금제(Max/Plus 등)를 사용하는 경우 실제 청구액과 다르며, 표시 금액은 청구·회계·정산 등
+      재무적 판단의 근거로 사용될 수 없습니다. 표시 수치의 정확성은 각 CLI 도구가 남기는 로그의
+      형식에 의존하며, 로그 형식 변경 등으로 부정확해질 수 있습니다.</p>
+
+      <div class="section-label">4. 환율 정보</div>
+      <p>KRW·JPY 환산에 사용되는 환율은 제3자 API(<code>open.er-api.com</code>)에서 제공받으며,
+      그 정확성과 최신성을 보장하지 않습니다. 조회 실패 시 가장 최근에 성공한 값 또는 내장
+      기본값이 사용됩니다.</p>
+
+      <div class="section-label">5. 보증의 부인</div>
+      <p>본 앱은 "있는 그대로(AS IS)" 제공됩니다. MIT 라이선스에 따라, 상품성·특정 목적 적합성·비침해를
+      포함한 어떠한 명시적·묵시적 보증도 하지 않습니다.</p>
+
+      <div class="section-label">6. 책임의 제한</div>
+      <p>관련 법이 허용하는 최대 범위 내에서, 개발자는 본 앱의 사용 또는 사용 불능으로 인해 발생하는
+      어떠한 직접·간접·부수적·결과적 손해에 대해서도 책임을 지지 않습니다.</p>
+
+      <div class="section-label">7. 제3자 상표</div>
+      <p>Claude와 Anthropic은 Anthropic PBC의, Codex와 OpenAI는 OpenAI의 상표입니다. 본 앱은
+      위 회사들과 무관한 독립 프로젝트이며, 이들로부터 보증·후원·제휴를 받지 않았습니다.</p>
+
+      <div class="section-label">8. 약관의 변경</div>
+      <p>본 약관은 저장소의 본 문서를 통해 변경·고지될 수 있으며, 변경 후 본 앱을 계속 사용하는 경우
+      변경된 약관에 동의한 것으로 간주됩니다.</p>
+
+      <div class="section-label">9. 문의</div>
+      <p>약관에 관한 문의는 GitHub 저장소의
+      <a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">Issues</a>로 부탁드립니다.</p>
+    </div>
+
+    <!-- ─────── English ─────── -->
+    <div data-lang="en">
+  <h1>Terms of Service</h1>
+  <div class="updated">Effective date: 2026-07-15</div>
+  <p>These Terms of Service ("Terms") apply to your use of <strong>AI Token Monitor</strong> (the "App"). By installing or using the App, you agree to these Terms. If you do not agree, please stop using the App and uninstall it.</p>
+  <div class="section-label">1. Software and License</div>
+  <p>The App is open-source software distributed under the <strong>MIT License</strong>. Use, reproduction, modification, and distribution of the source code are governed by the MIT License, the full text of which is available in the <a href="https://github.com/JTech-CO/AI-Token-Monitor/blob/main/LICENSE">LICENSE</a> file in the repository.</p>
+  <div class="section-label">2. Nature of the Service</div>
+  <p>The App is a local tool that runs entirely on your computer. There are no accounts, servers, or paid subscriptions, and the developer has no access to your data. For details on how data is handled, see the <a href="Privacy Policy.html">Privacy Policy</a>.</p>
+  <div class="section-label">3. Notice Regarding Cost Display</div>
+  <p>Costs shown by the App are <strong>estimates based on each provider's standard API pricing</strong>. If you are on a subscription plan (such as Max or Plus), the displayed amounts will differ from your actual bill and must not be used as a basis for billing, accounting, settlement, or other financial decisions. The accuracy of the displayed figures depends on the log formats produced by each CLI tool and may become inaccurate if those formats change.</p>
+  <div class="section-label">4. Exchange Rate Information</div>
+  <p>Exchange rates used for KRW and JPY conversion are provided by a third-party API (<code>open.er-api.com</code>), and their accuracy and timeliness are not guaranteed. If a lookup fails, the most recently retrieved value or a built-in default is used.</p>
+  <div class="section-label">5. Disclaimer of Warranty</div>
+  <p>The App is provided "AS IS". In accordance with the MIT License, no warranties of any kind, express or implied, are made, including warranties of merchantability, fitness for a particular purpose, and non-infringement.</p>
+  <div class="section-label">6. Limitation of Liability</div>
+  <p>To the maximum extent permitted by applicable law, the developer shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of, or inability to use, the App.</p>
+  <div class="section-label">7. Third-Party Trademarks</div>
+  <p>Claude and Anthropic are trademarks of Anthropic PBC; Codex and OpenAI are trademarks of OpenAI. The App is an independent project unaffiliated with these companies and is not endorsed by, sponsored by, or affiliated with these companies.</p>
+  <div class="section-label">8. Changes to These Terms</div>
+  <p>These Terms may be changed and announced through this document in the repository. Continued use of the App after a change constitutes acceptance of the updated Terms.</p>
+  <div class="section-label">9. Contact</div>
+  <p>For questions about these Terms, please use the GitHub repository's <a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">Issues</a>.</p>
+</div>
+
+    <!-- ─────── 日本語 ─────── -->
+    <div data-lang="ja">
+  <h1>Terms of Service</h1>
+  <div class="updated">施行日: 2026-07-15</div>
+  <p>本利用規約(以下「本規約」)は、<strong>AI Token Monitor</strong>(以下「本アプリ」)の使用に適用されます。本アプリをインストールまたは使用した時点で、本規約に同意したものとみなされます。同意されない場合は、使用を中止し、アプリを削除してください。</p>
+  <div class="section-label">1. ソフトウェアとライセンス</div>
+  <p>本アプリは、<strong>MITライセンス</strong>のもとで配布されるオープンソースソフトウェアです。ソースコードの使用・複製・改変・配布はMITライセンスの条件に従います。ライセンスの全文は、リポジトリの<a href="https://github.com/JTech-CO/AI-Token-Monitor/blob/main/LICENSE">LICENSE</a>ファイルでご確認いただけます。</p>
+  <div class="section-label">2. サービスの性質</div>
+  <p>本アプリは、ユーザーのコンピューター上でのみ動作するローカルツールです。アカウント・サーバー・有料サブスクリプションは存在せず、開発者がユーザーのデータにアクセスすることはできません。データの取り扱いの詳細については、<a href="Privacy Policy.html">プライバシーポリシー</a>をご参照ください。</p>
+  <div class="section-label">3. コスト表示に関する告知</div>
+  <p>本アプリが表示するコストは、各提供元の<strong>API定価に基づく概算値</strong>です。サブスクリプションプラン(Max/Plusなど)を利用している場合は実際の請求額と異なり、表示金額を請求・会計・精算などの財務的判断の根拠として使用してはなりません。表示される数値の正確性は、各CLIツールが残すログの形式に依存しており、ログ形式の変更などにより不正確になる場合があります。</p>
+  <div class="section-label">4. 為替レート情報</div>
+  <p>KRW・JPYへの換算に使用される為替レートは、第三者API(<code>open.er-api.com</code>)から取得しており、その正確性および最新性は保証されません。取得に失敗した場合は、直近に成功した値または内蔵のデフォルト値が使用されます。</p>
+  <div class="section-label">5. 保証の否認</div>
+  <p>本アプリは「現状のまま(AS IS)」提供されます。MITライセンスに基づき、商品性、特定目的への適合性、非侵害を含む、明示または黙示のいかなる保証も行いません。</p>
+  <div class="section-label">6. 責任の制限</div>
+  <p>適用法令が許容する最大限の範囲において、開発者は、本アプリの使用または使用不能に起因するいかなる直接的・間接的・付随的・結果的損害についても責任を負いません。</p>
+  <div class="section-label">7. 第三者の商標</div>
+  <p>ClaudeおよびAnthropicはAnthropic PBCの、CodexおよびOpenAIはOpenAIの商標です。本アプリは上記各社とは無関係の独立したプロジェクトであり、これらの企業により承認・後援されたものではなく、提携関係にもありません。</p>
+  <div class="section-label">8. 規約の変更</div>
+  <p>本規約は、リポジトリ内の本文書を通じて変更・告知されることがあります。変更後も本アプリの使用を継続した場合、変更後の規約に同意したものとみなされます。</p>
+  <div class="section-label">9. お問い合わせ</div>
+  <p>本規約に関するお問い合わせは、GitHubリポジトリの<a href="https://github.com/JTech-CO/AI-Token-Monitor/issues">Issues</a>までお願いいたします。</p>
+</div>
+
+    <div class="footer">
+      <span>AI Token Monitor · MIT License</span>
+      <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="index.html" data-lang="ko">소개 페이지</a><a href="index.html" data-lang="en">About</a><a href="index.html" data-lang="ja">紹介ページ</a> · <a href="Privacy Policy.html" data-lang="ko">개인정보 처리방침</a><a href="Privacy Policy.html" data-lang="en">Privacy Policy</a><a href="Privacy Policy.html" data-lang="ja">プライバシーポリシー</a></span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const ko = document.getElementById('btnKo');
+  const en = document.getElementById('btnEn');
+  const ja = document.getElementById('btnJa');
+  function setLang(lang) {
+    root.setAttribute('data-active', lang);
+    root.setAttribute('lang', lang);
+    ko.classList.toggle('on', lang === 'ko');
+    en.classList.toggle('on', lang === 'en');
+    ja.classList.toggle('on', lang === 'ja');
+    // 내부 페이지 링크에 현재 언어 전파
+    document.querySelectorAll('a[href^="index.html"], a[href^="Privacy Policy.html"], a[href^="Terms of Service.html"]').forEach(a => {
+      a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + lang);
+    });
+  }
+  ko.onclick = () => setLang('ko');
+  en.onclick = () => setLang('en');
+  ja.onclick = () => setLang('ja');
+  // 초기 언어: URL ?lang= (소개 페이지 등에서 언어 유지한 채 진입)
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  setLang(['ko', 'en', 'ja'].includes(urlLang) ? urlLang : 'ko');
+})();
+</script>
+</body>
+</html>

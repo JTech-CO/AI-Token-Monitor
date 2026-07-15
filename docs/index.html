@@ -71,6 +71,7 @@ a:hover { text-decoration: underline; }
 [data-lang] { display: none; }
 html[data-active="ko"] [data-lang="ko"] { display: revert; }
 html[data-active="en"] [data-lang="en"] { display: revert; }
+html[data-active="ja"] [data-lang="ja"] { display: revert; }
 
 .hero { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; }
 .hero-copy { flex: 1 1 380px; min-width: 320px; }
@@ -138,6 +139,7 @@ html[data-active="en"] [data-lang="en"] { display: revert; }
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
   font-size: 13px;
+  line-height: normal; /* 랜딩 본문(1.7) 상속 차단 — 실제 앱과 동일한 행 높이 */
 }
 
 .titlebar {
@@ -315,8 +317,8 @@ canvas { display: block; }
 .cache-stat-val   { font-size: 13px; color: var(--text); }
 
 .period-label { font-size: 12px; color: var(--text-muted); flex: 1; text-align: center; letter-spacing: 0.08em; }
-.period-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.period-stat { background: var(--bg-raised); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 10px 12px; }
+.period-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.period-stat { background: var(--bg-raised); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 8px 12px; }
 .period-stat-label { font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 5px; }
 .period-stat-val   { font-size: 17px; font-weight: 600; color: var(--text); }
 .period-stat-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
@@ -341,9 +343,14 @@ canvas { display: block; }
       <a href="https://github.com/JTech-CO/AI-Token-Monitor#readme">README</a>
       <a href="Privacy Policy.html" data-lang="ko">개인정보 처리방침</a>
       <a href="Privacy Policy.html" data-lang="en">Privacy Policy</a>
+      <a href="Privacy Policy.html" data-lang="ja">プライバシーポリシー</a>
+      <a href="Terms of Service.html" data-lang="ko">이용약관</a>
+      <a href="Terms of Service.html" data-lang="en">Terms</a>
+      <a href="Terms of Service.html" data-lang="ja">利用規約</a>
       <div class="lang-switch">
         <button class="lang-btn on" id="btnKo">한국어</button>
         <button class="lang-btn" id="btnEn">EN</button>
+        <button class="lang-btn" id="btnJa">日本語</button>
       </div>
     </nav>
   </header>
@@ -352,8 +359,10 @@ canvas { display: block; }
     <div class="hero-copy">
       <h1 data-lang="ko">터미널 옆,<br>토큰 사용량 계기판.</h1>
       <h1 data-lang="en">Your token usage,<br>right beside the terminal.</h1>
+      <h1 data-lang="ja">ターミナルのそばに、<br>トークン使用量メーター。</h1>
       <p class="hero-tag" data-lang="ko">Claude Code · Codex CLI 토큰 사용량과 비용을<br>실시간으로 보여주는 데스크톱 오버레이</p>
       <p class="hero-tag" data-lang="en">A desktop overlay that shows Claude Code · Codex CLI<br>token usage and cost in real time</p>
+      <p class="hero-tag" data-lang="ja">Claude Code · Codex CLI のトークン使用量とコストを<br>リアルタイムで表示するデスクトップオーバーレイ</p>
       <p class="desc" data-lang="ko">
         로컬에 기록되는 세션 로그(JSONL)를 직접 파싱해 <strong>약 0.5초 내에 갱신</strong>됩니다.
         모든 데이터는 로컬에서만 처리되며, 개인 사용부터 <strong>수 T(조) 토큰 규모의
@@ -365,27 +374,41 @@ canvas { display: block; }
         <strong>heavy-user and team workloads in the multi-trillion token range</strong>,
         all on a single screen.
       </p>
+      <p class="desc" data-lang="ja">
+        ローカルに記録されるセッションログ（JSONL）を直接パースし、<strong>約0.5秒以内に
+        更新</strong>されます。すべてのデータはローカルでのみ処理され、個人利用から
+        <strong>数T（兆）トークン規模のヘビーユーザー・チームの使用量</strong>まで、
+        同じ画面で確認できます。
+      </p>
       <ul class="feat" data-lang="ko">
         <li><strong>정확한 집계</strong> — 중복 로그 dedup, 캐시 읽기/쓰기 단가 분리 계산</li>
         <li><strong>프로바이더 구분</strong> — ALL / CLAUDE / CODEX 탭, 일별 스택 바 차트</li>
-        <li><strong>인포그래픽</strong> — 활동 히트맵, 모델별 분석, 캐시 효율 도넛</li>
+        <li><strong>인포그래픽</strong> — 활동 히트맵, 모델별 분석(주/월/전체), 캐시 효율 도넛</li>
         <li><strong>기간 통계</strong> — 주간 / 월간 / 전체, k · M · B · T 단위</li>
-        <li><strong>통화 전환</strong> — USD 기본, 실시간 환율 KRW 토글</li>
+        <li><strong>통화 전환</strong> — USD 기본, 실시간 환율 KRW·JPY 전환</li>
         <li><strong>트레이 상주</strong> — 컴팩트 모드, 휠 1틱 = 1페이지 스크롤</li>
       </ul>
       <ul class="feat" data-lang="en">
         <li><strong>Accurate accounting</strong> — log deduplication, separate cache read/write pricing</li>
         <li><strong>Per-provider view</strong> — ALL / CLAUDE / CODEX tabs, daily stacked bar chart</li>
-        <li><strong>Infographics</strong> — activity heatmap, per-model breakdown, cache efficiency donut</li>
+        <li><strong>Infographics</strong> — activity heatmap, per-model breakdown (wk/mo/all), cache efficiency donut</li>
         <li><strong>Period stats</strong> — weekly / monthly / all-time, k · M · B · T units</li>
-        <li><strong>Currency toggle</strong> — USD by default, live-rate KRW conversion</li>
+        <li><strong>Currency toggle</strong> — USD by default, live-rate KRW·JPY conversion</li>
         <li><strong>Tray resident</strong> — compact mode, one wheel tick = one page</li>
       </ul>
+      <ul class="feat" data-lang="ja">
+        <li><strong>正確な集計</strong> — 重複ログの除去（dedup）、キャッシュ読み取り/書き込み単価の分離計算</li>
+        <li><strong>プロバイダー別表示</strong> — ALL / CLAUDE / CODEX タブ、日別スタックバーチャート</li>
+        <li><strong>インフォグラフィック</strong> — アクティビティヒートマップ、モデル別分析（週/月/全体）、キャッシュ効率ドーナツ</li>
+        <li><strong>期間統計</strong> — 週間 / 月間 / 全期間、k · M · B · T 単位</li>
+        <li><strong>通貨切替</strong> — USD 基本、リアルタイム為替レートで KRW·JPY 換算</li>
+        <li><strong>トレイ常駐</strong> — コンパクトモード、ホイール1ティック = 1ページ</li>
+      </ul>
       <div class="btn-row">
-        <a class="btn btn-primary" href="https://github.com/JTech-CO/AI-Token-Monitor"><span data-lang="ko">GitHub에서 받기</span><span data-lang="en">Get it on GitHub</span></a>
-        <a class="btn" href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span></a>
+        <a class="btn btn-primary" href="https://github.com/JTech-CO/AI-Token-Monitor"><span data-lang="ko">GitHub에서 받기</span><span data-lang="en">Get it on GitHub</span><span data-lang="ja">GitHub で入手</span></a>
+        <a class="btn" href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span><span data-lang="ja">プライバシーポリシー</span></a>
       </div>
-      <div class="install"><button class="copy-btn" id="btnCopy" type="button">전체복사</button><span class="c" data-lang="ko"># 설치 및 실행</span><span class="c" data-lang="en"># Install &amp; run</span>
+      <div class="install"><button class="copy-btn" id="btnCopy" type="button">전체복사</button><span class="c" data-lang="ko"># 설치 및 실행</span><span class="c" data-lang="en"># Install &amp; run</span><span class="c" data-lang="ja"># インストールと実行</span>
 <span class="p">$</span> git clone https://github.com/JTech-CO/AI-Token-Monitor.git
 <span class="p">$</span> cd AI-Token-Monitor
 <span class="p">$</span> npm install
@@ -487,7 +510,14 @@ canvas { display: block; }
 
           <div class="page">
           <section class="section">
-            <div class="section-label">MODEL BREAKDOWN</div>
+            <div class="section-header">
+              <span class="section-label">MODEL BREAKDOWN</span>
+              <div class="chart-controls">
+                <button class="chip" data-mrange="week">wk</button>
+                <button class="chip" data-mrange="month">mo</button>
+                <button class="chip active" data-mrange="all">all</button>
+              </div>
+            </div>
             <div id="modelList" class="model-list"></div>
             <div class="chart-legend">
               <span class="legend-item"><span class="legend-dot dot-input"></span>input</span>
@@ -533,7 +563,7 @@ canvas { display: block; }
                 <span class="log-path-text">CODEX ~/.codex/sessions/**/*.jsonl</span>
               </div>
             </div>
-            <div class="fx-info"><span data-lang="ko">FX 1 USD = ₩1,520 (고정) · 이 위젯은 임의 생성 데이터로 동작하는 데모입니다</span><span data-lang="en">FX 1 USD = ₩1,520 (fixed) · This widget is a demo running on generated data</span></div>
+            <div class="fx-info">FX 1 USD = ₩1,520 · ¥160 (fixed) · <span data-lang="ko">이 위젯은 임의 생성 데이터로 동작하는 데모입니다</span><span data-lang="en">This widget is a demo running on generated data</span><span data-lang="ja">このウィジェットはランダム生成データで動作するデモです</span></div>
           </section>
           </div><!-- /page 5 -->
 
@@ -548,12 +578,16 @@ canvas { display: block; }
         ▲ Interactive demo — two years of team-scale usage generated from a fixed seed
         (not real user data). Try the tabs, wheel scrolling, and the period/currency toggles.
       </p>
+      <p class="demo-caption" data-lang="ja">
+        ▲ インタラクティブデモ — 固定シードから生成した2年分のチーム規模の使用量です
+        （実際のユーザーデータではありません）。タブ切替、ホイールスクロール、期間・通貨の切替をお試しください。
+      </p>
     </div>
   </main>
 
   <footer class="site-foot">
     <span>© 2026 JTech-CO · MIT License</span>
-    <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span></a></span>
+    <span><a href="https://github.com/JTech-CO/AI-Token-Monitor">GitHub</a> · <a href="Privacy Policy.html"><span data-lang="ko">개인정보 처리방침</span><span data-lang="en">Privacy Policy</span><span data-lang="ja">プライバシーポリシー</span></a> · <a href="Terms of Service.html"><span data-lang="ko">이용약관</span><span data-lang="en">Terms of Service</span><span data-lang="ja">利用規約</span></a></span>
   </footer>
 </div>
 
@@ -659,12 +693,25 @@ function aggregate(provider) {
   for (let i = 29; i >= 0; i--) daily[dateKey(new Date(today0.getTime() - i * DAY))] = mkDay();
 
   const heatmap = {};
-  const modelStats = {};
+  const modelStats = { week: {}, month: {}, all: {} };
   let totalInput = 0, totalCacheRead = 0, totalCacheCreate = 0, cacheSavings = 0;
   const todayKey = dateKey(today0);
   const weekKeys = new Set();
-  for (let i = 0; i < 7; i++) weekKeys.add(dateKey(new Date(today0.getTime() - i * DAY)));
+  const monthKeys = new Set();
+  for (let i = 0; i < 30; i++) {
+    const k = dateKey(new Date(today0.getTime() - i * DAY));
+    monthKeys.add(k);
+    if (i < 7) weekKeys.add(k);
+  }
   let weekTokens = 0, weekCost = 0, todayTokens = 0, todayCost = 0;
+
+  function addModel(bucket, mKey, r) {
+    if (!bucket[mKey]) bucket[mKey] = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, cost: 0, requests: 0 };
+    const ms = bucket[mKey];
+    ms.input += r.input; ms.output += r.output;
+    ms.cacheRead += r.cacheRead; ms.cacheCreate += r.cacheCreate;
+    ms.cost += r.cost; ms.requests += r.requests;
+  }
 
   for (const r of records) {
     if (provider !== 'all' && r.p !== provider) continue;
@@ -680,11 +727,9 @@ function aggregate(provider) {
     heatmap[r.key] = (heatmap[r.key] || 0) + tokens;
 
     const mKey = r.p + '/' + r.m;
-    if (!modelStats[mKey]) modelStats[mKey] = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, cost: 0, requests: 0 };
-    const ms = modelStats[mKey];
-    ms.input += r.input; ms.output += r.output;
-    ms.cacheRead += r.cacheRead; ms.cacheCreate += r.cacheCreate;
-    ms.cost += r.cost; ms.requests += r.requests;
+    addModel(modelStats.all, mKey, r);
+    if (monthKeys.has(r.key)) addModel(modelStats.month, mKey, r);
+    if (weekKeys.has(r.key)) addModel(modelStats.week, mKey, r);
 
     totalInput += r.input; totalCacheRead += r.cacheRead; totalCacheCreate += r.cacheCreate;
     cacheSavings += r.savings;
@@ -708,19 +753,21 @@ const AGG = { all: aggregate('all'), claude: aggregate('claude'), codex: aggrega
 
 // 팀 규모 경고 한도
 const LIMITS = { sessionTokens: 5e9, weekCost: 120000 };
-const FX_RATE = 1520;
+const FX_RATES = { KRW: 1520, JPY: 160 };
 const MIN_HEAT_YEAR = new Date(startT).getFullYear();
 
 // ═══ 상태 · 포맷터 ═══
 const state = {
   provider: 'all', chartRange: 7, chartMetric: 'tokens',
-  heatYear: now.getFullYear(), periodMode: 'week', periodOffset: 0, currency: 'usd',
+  heatYear: now.getFullYear(), periodMode: 'week', periodOffset: 0,
+  modelRange: 'all', currency: 'usd',
 };
 
 // UI 언어 (정적 텍스트는 [data-lang] CSS로, JS 생성 문자열은 STR로 전환)
 const STR = {
-  ko: { copy: '전체복사', copied: '복사됨', savings: '캐시 절감액' },
-  en: { copy: 'Copy all', copied: 'Copied', savings: 'cache savings' },
+  ko: { copy: '전체복사', copied: '복사됨' },
+  en: { copy: 'Copy all', copied: 'Copied' },
+  ja: { copy: '全てコピー', copied: 'コピー済み' },
 };
 let uiLang = 'ko';
 
@@ -738,12 +785,13 @@ function fmtMoney(usd) {
   if (usd == null || isNaN(usd)) return '—';
   const sign = usd < 0 ? '-' : '';
   const a = Math.abs(usd);
-  if (state.currency === 'krw') {
-    const w = a * FX_RATE;
-    if (w >= 1e9) return sign + '₩' + (w / 1e9).toFixed(2) + 'B';
-    if (w >= 1e6) return sign + '₩' + (w / 1e6).toFixed(2) + 'M';
-    if (w >= 1e3) return sign + '₩' + (w / 1e3).toFixed(1) + 'k';
-    return sign + '₩' + Math.round(w);
+  if (state.currency === 'krw' || state.currency === 'jpy') {
+    const symbol = state.currency === 'krw' ? '₩' : '¥';
+    const v = a * (state.currency === 'krw' ? FX_RATES.KRW : FX_RATES.JPY);
+    if (v >= 1e9) return sign + symbol + (v / 1e9).toFixed(2) + 'B';
+    if (v >= 1e6) return sign + symbol + (v / 1e6).toFixed(2) + 'M';
+    if (v >= 1e3) return sign + symbol + (v / 1e3).toFixed(1) + 'k';
+    return sign + symbol + Math.round(v);
   }
   if (a >= 1e6)  return sign + '$' + (a / 1e6).toFixed(2) + 'M';
   if (a >= 1000) return sign + '$' + (a / 1000).toFixed(2) + 'k';
@@ -901,7 +949,7 @@ function renderHeatmap(d) {
 }
 
 function renderModels(d) {
-  const entries = Object.entries(d.modelStats).sort((a, b) => b[1].cost - a[1].cost);
+  const entries = Object.entries(d.modelStats[state.modelRange] || {}).sort((a, b) => b[1].cost - a[1].cost);
   let html = '';
   for (const [key, v] of entries.slice(0, 5)) {
     const [prov, ...mp] = key.split('/');
@@ -956,7 +1004,7 @@ function renderDonut(d) {
     '<span class="cache-stat-val" style="color:var(--accent)">' + hit.toFixed(1) + '%</span></div>' +
     '<div class="cache-stat-item"><span class="cache-stat-label">miss rate</span>' +
     '<span class="cache-stat-val">' + (100 - hit).toFixed(1) + '%</span></div>' +
-    '<div class="cache-stat-item"><span class="cache-stat-label">' + STR[uiLang].savings + '</span>' +
+    '<div class="cache-stat-item"><span class="cache-stat-label">Cache Savings</span>' +
     '<span class="cache-stat-val" style="color:var(--accent)">' + fmtMoney(d.cacheSavings) + '</span></div>';
 }
 
@@ -1040,26 +1088,47 @@ document.querySelectorAll('[data-period]').forEach(btn => {
     renderPeriod(AGG[state.provider]);
   };
 });
+document.querySelectorAll('[data-mrange]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('[data-mrange]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.modelRange = btn.dataset.mrange;
+    renderModels(AGG[state.provider]);
+  };
+});
+// USD → KRW → JPY 순환
 $('btnCurrency').onclick = () => {
-  state.currency = state.currency === 'usd' ? 'krw' : 'usd';
+  state.currency = state.currency === 'usd' ? 'krw' : state.currency === 'krw' ? 'jpy' : 'usd';
   const btn = $('btnCurrency');
   btn.textContent = state.currency.toUpperCase();
-  btn.classList.toggle('krw', state.currency === 'krw');
+  btn.classList.toggle('krw', state.currency !== 'usd');
   render();
 };
 
-// 언어 전환 (한국어 기본 / EN)
+// 언어 전환 (한국어 기본 / EN / 日本語) — 통화·내부 링크도 함께 연동
+const LANG_CURRENCY = { ko: 'krw', en: 'usd', ja: 'jpy' };
 function setLang(lang) {
   uiLang = lang;
   document.documentElement.setAttribute('data-active', lang);
   document.documentElement.setAttribute('lang', lang);
   $('btnKo').classList.toggle('on', lang === 'ko');
   $('btnEn').classList.toggle('on', lang === 'en');
+  $('btnJa').classList.toggle('on', lang === 'ja');
   $('btnCopy').textContent = STR[lang].copy;
-  renderDonut(AGG[state.provider]);
+  // 데모 통화 연동 (한국어→KRW, EN→USD, 日本語→JPY)
+  state.currency = LANG_CURRENCY[lang];
+  const cbtn = $('btnCurrency');
+  cbtn.textContent = state.currency.toUpperCase();
+  cbtn.classList.toggle('krw', state.currency !== 'usd');
+  // 처방침·이용약관 링크에 현재 언어 전파
+  document.querySelectorAll('a[href^="Privacy Policy.html"], a[href^="Terms of Service.html"]').forEach(a => {
+    a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + lang);
+  });
+  render();
 }
 $('btnKo').onclick = () => setLang('ko');
 $('btnEn').onclick = () => setLang('en');
+$('btnJa').onclick = () => setLang('ja');
 
 // 설치 명령 전체복사
 const INSTALL_CMDS = [
@@ -1109,7 +1178,9 @@ $('btnCopy').onclick = async () => {
   }, { passive: false });
 })();
 
-render();
+// 초기 언어: URL ?lang= (다른 페이지에서 언어 유지한 채 진입)
+const urlLang = new URLSearchParams(location.search).get('lang');
+setLang(['ko', 'en', 'ja'].includes(urlLang) ? urlLang : 'ko');
 </script>
 </body>
 </html>

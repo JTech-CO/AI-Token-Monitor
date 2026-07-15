@@ -28,9 +28,9 @@
 - **실시간 추적**: 로그 파일 변경 즉시 갱신(0.5초 디바운스) + 60초 폴백 폴링, mtime 기반 증분 파싱
 - **정확한 집계**: Claude 로그 중복 라인 dedup(`message.id` 기준), Codex `token_count` 누적치 델타 집계
 - **멀티 프로바이더**: ALL / CLAUDE / CODEX 탭, 일별 사용량을 프로바이더별 색상 스택 바로 표시
-- **인포그래픽**: 오늘 요약, 세션·주간 한도 게이지, GitHub 스타일 활동 히트맵, 모델별 분석, 캐시 효율 도넛(절감액 추정 포함)
+- **인포그래픽**: 오늘 요약, 세션·주간 한도 게이지, GitHub 스타일 활동 히트맵, 모델별 분석(주간/월간/전체 전환), 캐시 효율 도넛(절감액 추정 포함)
 - **기간 통계**: 주간 / 월간 / 전체(all), `‹ ›` 화살표로 과거 탐색
-- **통화 전환**: USD 기본, KRW 토글 — 실시간 환율(6시간 주기) 적용, 실패 시 고정 1,520원
+- **통화 전환**: USD 기본, KRW·JPY 순환 토글 — 실시간 환율(6시간 주기), 조회 실패 시 가장 최근 성공값 유지
 - **컴팩트 모드**: 타이틀바 `─` 클릭 시 오늘 요약만 보이는 초소형 바로 축소, `▴`로 복원
 - **페이지 스크롤**: 휠 1틱마다 정확히 한 화면(섹션 그룹)씩 스냅 이동
 - **트레이 상주**: `×`는 트레이로 숨기기, 트레이 클릭으로 토글, 단일 인스턴스 보장
@@ -82,7 +82,7 @@
 |---|---|
 | 세션·주간 경고 한도 | `src/renderer/app.js` → `LIMITS` |
 | 모델별 단가 (USD/MTok) | `src/usage.js` → `PRICING` |
-| 고정 환율 폴백 | `src/main.js` → `FX_FALLBACK` |
+| 환율 기본값 (최초 실행용) | `src/main.js` → `FX_SEED` |
 
 ## 4. 폴더 구조 (Structure)
 
@@ -100,6 +100,7 @@ ai-token-monitor/
 
 ## 5. 정보 (Info)
 
-- **소개 페이지**: [jtech-co.github.io/AI-Token-Monitor/docs](https://jtech-co.github.io/AI-Token-Monitor/docs/) — 실제 UI를 재현한 인터랙티브 데모
-- **개인정보 처리방침**: [Privacy Policy](https://jtech-co.github.io/AI-Token-Monitor/docs/Privacy%20Policy.html) (한국어/English)
+- **소개 페이지**: [jtech-co.github.io/AI-Token-Monitor/docs](https://jtech-co.github.io/AI-Token-Monitor/docs/) — 실제 UI를 재현한 인터랙티브 데모 (한국어/English/日本語)
+- **개인정보 처리방침**: [Privacy Policy](https://jtech-co.github.io/AI-Token-Monitor/docs/Privacy%20Policy.html) (한국어/English/日本語)
+- **이용약관**: [Terms of Service](https://jtech-co.github.io/AI-Token-Monitor/docs/Terms%20of%20Service.html) (한국어/English/日本語)
 - **License**: MIT
